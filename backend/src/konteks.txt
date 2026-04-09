@@ -1,0 +1,159 @@
+SIMRS Backend API
+Backend API untuk Sistem Informasi Manajemen Rumah Sakit (SIMRS) menggunakan Node.js, Express, dan PostgreSQL.
+🚀 Tech Stack
+·	Runtime: Node.js v16+
+·	Framework: Express.js
+·	Database: PostgreSQL 14+
+·	Authentication: JWT (JSON Web Token)
+·	Validation: Express Validator
+·	Security: Helmet, CORS, Rate Limiting
+📁 Project Structure
+backend/
+├── src/
+│   ├── config/
+│   │   └── database.js          # Database connection
+│   ├── controllers/
+│   │   └── auth.controller.js   # Auth controllers
+│   ├── middleware/
+│   │   ├── auth.middleware.js   # Authentication & Authorization
+│   │   ├── error.middleware.js  # Error handling
+│   │   └── validation.middleware.js # Input validation
+│   ├── routes/
+│   │   └── auth.routes.js       # Auth routes
+│   └── utils/
+│       └── auth.js              # JWT utilities
+├── .env.example                 # Environment variables template
+├── package.json                 # Dependencies
+└── server.js                    # Entry point
+
+🛠️ Installation
+1. Clone & Install Dependencies
+cd backend
+npm install
+
+2. Setup Environment Variables
+cp .env.example .env
+
+Edit .env file:
+NODE_ENV=development
+PORT=5000
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=simrs_db
+DB_USER=postgres
+DB_PASSWORD=your_password
+JWT_SECRET=your_super_secret_jwt_key
+CORS_ORIGIN=http://localhost:3000
+
+3. Setup Database
+# Create database
+createdb simrs_db
+
+# Run migration (import schema)
+psql -U postgres -d simrs_db -f ../simrs_database_schema.sql
+
+4. Run Server
+# Development mode (with auto-reload)
+npm run dev
+
+# Production mode
+npm start
+
+Server akan berjalan di: http://localhost:5000
+📡 API Endpoints
+Authentication
+Method	Endpoint	Description	Access
+POST	/api/v1/auth/login	User login	Public
+POST	/api/v1/auth/register	Register user	Admin
+POST	/api/v1/auth/refresh	Refresh token	Public
+GET	/api/v1/auth/me	Get profile	Private
+PUT	/api/v1/auth/change-password	Change password	Private
+POST	/api/v1/auth/logout	Logout	Private
+
+Health Check
+Method	Endpoint	Description
+GET	/health	Server health check
+
+🔐 Authentication
+API menggunakan JWT untuk autentikasi. Setelah login, simpan accessToken dan gunakan di header:
+Authorization: Bearer YOUR_ACCESS_TOKEN
+
+Login Request Example
+POST /api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+Login Response Example
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user": {
+      "user_id": "uuid",
+      "username": "admin",
+      "full_name": "Administrator",
+      "role": "admin"
+    },
+    "accessToken": "eyJhbGciOiJIUzI1NiIs...",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIs..."
+  }
+}
+
+👥 User Roles
+·	admin - Full access
+·	dokter - Doctor access
+·	perawat - Nurse access
+·	farmasi - Pharmacy access
+·	laboratorium - Laboratory access
+·	radiologi - Radiology access
+·	kasir - Cashier access
+·	registrasi - Registration access
+🛡️ Security Features
+1.	Helmet - Security headers
+2.	CORS - Cross-Origin Resource Sharing
+3.	Rate Limiting - Prevent brute force attacks
+4.	JWT - Secure authentication
+5.	Password Hashing - bcrypt
+6.	Input Validation - Express Validator
+📝 Error Handling
+API mengembalikan error dalam format standar:
+{
+  "success": false,
+  "message": "Error message",
+  "errors": [
+    {
+      "field": "username",
+      "message": "Username is required"
+    }
+  ]
+}
+
+🧪 Testing
+# Test database connection
+curl http://localhost:5000/health
+
+# Test login
+curl -X POST http://localhost:5000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin123"}'
+
+📚 Next Steps (TODO)
+·	Implement Pasien (Patient) module
+·	Implement Dokter (Doctor) module
+·	Implement Pendaftaran (Registration) module
+·	Implement Rekam Medis (Medical Record) module
+·	Implement Laboratorium (Laboratory) module
+·	Implement Radiologi (Radiology) module
+·	Implement Farmasi (Pharmacy) module
+·	Implement Keuangan (Finance) module
+·	Add API documentation (Swagger/OpenAPI)
+·	Add unit tests
+·	Add integration tests
+📄 License
+MIT
+👨‍💻 Developer
+SIMRS Team
